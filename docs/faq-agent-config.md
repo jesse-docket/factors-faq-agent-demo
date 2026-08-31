@@ -123,19 +123,38 @@ Rules:
 
 ---
 
-## 4. How to run the demo
+## 4. Enable it — order of operations
 
-The bottom-left panel switches the FAQ block between four states. Walk them in order:
+The demo page has no persona buttons. Nothing on the page fakes personalisation: the FAQ block you
+see is the source block, and every change to it has to come from the Agent at render time. That is
+the whole point of showing it to Factors this way.
 
-1. **Off — the FAQ block today.** Five static questions, identical for everyone, no offer anywhere.
-2. **New visitor, no context.** The offer-aware question moves to the top with a LIVE OFFER badge.
-   The incentive is on the page before the chat is opened.
-3. **Visitor who saw /pricing.** Introductory questions drop out; the same offer is reframed as 15%
-   off the plan they were already looking at.
-4. **Already talked to Scout.** No re-pitch — setup questions surface, offer restated once as the
-   closing action.
+1. **Widget tab → Whitelist Domains.** Add `jesse-docket.github.io` explicitly. The Scout callout
+   currently renders on the demo page, so the domain is not being blocked — but that is also what an
+   empty (allow-all) whitelist looks like, so check which case you are in. Do not remove
+   `www.factors.ai` while you are in there: a wiped whitelist took the TestMU agent dark for two
+   days.
+2. **FAQ Agent panel → toggle on.**
+3. **Instructions box.** Paste section 1a verbatim. Click Save instructions and confirm the
+   character counter reads 1898 / 2000, not a truncated number.
+4. **Register pages.** Paste the demo URL only (section 1b). Click Queue for scanning.
+5. **Wait for Registered pages to populate.** Scanning runs in the background; an empty Registered
+   pages list means nothing has been scanned yet and the block will not change.
+6. **Main prompt + partial.** Add sections 2 and 3 in Portkey, not in the dashboard Agent
+   Instructions box — that box is a summary, not the prompt Scout runs.
+7. **Do not register any www.factors.ai URL yet.** Registering production pages means the Agent
+   starts rewriting Factors’ live FAQ copy. That is a customer decision, not ours.
 
-Then open Scout in the corner and ask about pricing to show the offer landing in chat as well.
+### Demo script
+
+1. Open the demo page in a fresh incognito window. Show the FAQ block and the offer line in the top
+   bar — the incentive is visible with the chat still closed.
+2. Open Scout, ask about pricing, and show the offer landing in the conversation.
+3. Hit Reset agent session (bottom left), reload, and show what the Agent does differently on the
+   second visit.
+
+Step 3 is the part that depends on the open items below. If the Agent turns out to be scan-time
+only, step 3 shows nothing and you should not promise it on the call.
 
 ---
 

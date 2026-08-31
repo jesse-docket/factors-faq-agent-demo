@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Factors.ai — FAQ Agent demo</title>
+<meta name="robots" content="noindex,nofollow" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=STIX+Two+Text:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --ink:#080808;
+    --bg:#FFFFFD;
+    --cream:#E8E7E4;
+    --muted:#8C8C8A;
+    --red:#FF2020;
+    --blue:#2D62FF;
+    --line:rgba(8,8,8,.12);
+    --grey:#EFEFEF;
+    --highlight:#FFD84D;
+    --serif:"STIX Two Text",Georgia,serif;
+    --sans:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+  a{color:var(--blue);text-decoration:none}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 40px}
+  @media(max-width:700px){.wrap{padding:0 20px}}
+
+  .announce{background:var(--ink);color:#fff;font-size:14px;text-align:center;padding:11px 20px}
+  .announce a{color:#8FA9FF;margin-left:8px}
+
+  nav{position:sticky;top:0;z-index:50;background:var(--bg);border-bottom:1px solid var(--line)}
+  .nav-in{display:flex;align-items:center;gap:26px;height:72px}
+  nav img.logo{height:22px}
+  .nav-spacer{flex:1}
+  nav .login{color:var(--ink);font-size:15px}
+  .cta{display:inline-flex;align-items:center;justify-content:center;border-radius:0;font-size:15px;font-family:var(--sans);cursor:pointer}
+  .cta-red{background:var(--red);color:#fff;padding:15px 26px;border:1px solid var(--red)}
+  .cta-outline{background:transparent;color:var(--ink);padding:15px 26px;border:1px solid var(--ink)}
+  .burger{width:38px;height:38px;background:var(--grey);display:grid;place-items:center}
+  .burger i{display:block;width:16px;height:1.5px;background:var(--ink);box-shadow:0 5px 0 var(--ink),0 -5px 0 var(--ink)}
+
+  .hero{padding:96px 0 80px}
+  .eyebrow{display:flex;align-items:center;gap:11px;font-size:15px;margin-bottom:26px}
+  .eyebrow span.sq{width:13px;height:13px;background:var(--red);display:block}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(38px,5.4vw,64px);line-height:1.1;letter-spacing:-.03em;margin:0 0 26px;max-width:20ch}
+  .annot{position:relative;padding:0 9px;display:inline-block}
+  .annot svg{position:absolute;left:-2px;top:2px;width:calc(100% + 6px);height:100%;overflow:visible;pointer-events:none}
+  .hero p.lede{font-size:17px;color:var(--ink);max-width:52ch;margin:0 0 34px}
+  .hero-ctas{display:flex;gap:12px;flex-wrap:wrap}
+
+  .trusted{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:38px 0}
+  .trusted h2{font-family:var(--sans);font-size:14px;font-weight:500;color:var(--muted);margin:0 0 26px;text-align:center}
+  .trusted .row{display:flex;gap:52px;justify-content:center;align-items:center;flex-wrap:wrap}
+  .trusted img{height:22px;opacity:.8}
+
+  section{padding:92px 0}
+  h2.display{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4.4vw,58px);line-height:1.12;letter-spacing:-.03em;margin:0 0 18px;max-width:26ch}
+  p.sub{color:var(--muted);font-size:17px;max-width:56ch;margin:0 0 52px}
+
+  .why{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:44px 40px}
+  .why h3{font-size:17px;font-weight:600;margin:0 0 10px}
+  .why p{color:var(--muted);font-size:15px;margin:0}
+  .why .item{border-top:1px solid var(--line);padding-top:22px}
+
+  .proof{background:var(--cream)}
+  .proof .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1px;background:var(--line)}
+  .proof .cell{background:var(--cream);padding:34px}
+  .proof blockquote{font-family:var(--serif);font-size:19px;line-height:1.4;margin:0 0 26px}
+  .proof .metric{font-family:var(--serif);font-size:44px;line-height:1;color:var(--red)}
+  .proof .who{font-size:13px;color:var(--muted);margin-top:12px}
+
+  #faq{padding-top:80px}
+  .faq-top{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap;margin-bottom:14px}
+  .statebar{border:1px solid var(--line);background:#fff;padding:14px 18px;font-size:14px;margin:0 0 26px}
+  .statebar b{font-weight:600}
+  .qrow{border-top:1px solid var(--line)}
+  .qrow:last-child{border-bottom:1px solid var(--line)}
+  .qrow summary{list-style:none;cursor:pointer;display:flex;align-items:flex-start;gap:24px;padding:26px 0;font-size:17px;font-weight:500;line-height:1.4}
+  .qrow summary::-webkit-details-marker{display:none}
+  .qrow summary .qtext{flex:1;max-width:62ch}
+  .toggle{width:30px;height:30px;border:1px solid var(--ink);border-radius:50%;display:grid;place-items:center;flex:0 0 auto;font-size:13px;margin-top:2px}
+  .qrow[open] .toggle{background:var(--ink);color:#fff}
+  .qrow .ans{padding:0 54px 30px 0;max-width:74ch;color:var(--muted);font-size:16px}
+  .qrow .ans a{font-weight:500;border-bottom:1px solid rgba(45,98,255,.4)}
+  .badge{background:var(--red);color:#fff;font-size:11px;font-weight:600;padding:3px 8px;flex:0 0 auto;margin-top:3px;letter-spacing:.02em}
+  .badge.blue{background:var(--blue)}
+
+  .closer{background:var(--ink);color:#fff;text-align:center}
+  .closer h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4.4vw,54px);letter-spacing:-.03em;margin:0 0 28px;line-height:1.1}
+  .closer .row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+  .closer .cta-outline{color:#fff;border-color:#fff}
+
+  footer{padding:32px 0;font-size:13px;color:var(--muted);border-top:1px solid var(--line)}
+
+  .demobar{position:fixed;left:20px;bottom:20px;z-index:60;background:#fff;border:1px solid var(--ink);
+    display:flex;flex-direction:column;gap:6px;padding:12px;max-width:260px;font-size:12px}
+  .demobar .h{font-weight:600;font-size:11px;letter-spacing:.04em;color:var(--muted)}
+  .demobar button{border:1px solid var(--line);background:#fff;padding:8px 10px;text-align:left;
+    font-family:var(--sans);font-size:12.5px;cursor:pointer;border-radius:0}
+  .demobar button[aria-pressed="true"]{background:var(--ink);color:#fff;border-color:var(--ink)}
+  .demobar .reset{color:var(--red);border-style:dashed}
+  @media(max-width:700px){.demobar{left:12px;right:12px;bottom:12px;max-width:none}}
+</style>
+</head>
+<body>
+
+<div class="announce">
+  [Giveaway] 20 accounts that are currently searching for you
+  <a href="https://www.factors.ai/tools/b2b-buyer-intent-data">Show me →</a>
+</div>
+
+<nav>
+  <div class="wrap nav-in">
+    <img class="logo" src="https://cdn.prod.website-files.com/687fce092940b00a1d5d923a/689df14b71f53b19c409871a_Group%2039947%20(1).svg" alt="factors.ai" />
+    <div class="nav-spacer"></div>
+    <a class="login" href="https://app.factors.ai/signup">Log in</a>
+    <a class="cta cta-red" href="https://app.factors.ai/signup">Book a demo</a>
+    <div class="burger"><i></i></div>
+  </div>
+</nav>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow"><span class="sq"></span> AI Account Based Marketing Platform</div>
+    <h1>Your ABM team's <span class="annot">AI brain<svg viewBox="0 0 200 60" preserveAspectRatio="none"><path d="M4 8 Q100 2 196 7 Q198 30 195 53 Q100 58 5 52 Q2 30 4 8" fill="none" stroke="#FFD84D" stroke-width="3" stroke-linecap="round"/></svg></span> and execution layer</h1>
+    <p class="lede">Get all your ABM data in one place and use our AI Agents to identify accounts, launch campaigns, attribute wins, and more.</p>
+    <div class="hero-ctas">
+      <a class="cta cta-red" href="https://app.factors.ai/signup">Start Free Trial</a>
+      <a class="cta cta-outline" href="https://app.factors.ai/signup">Interactive Demo</a>
+    </div>
+  </div>
+</header>
+
+<div class="trusted">
+  <div class="wrap">
+    <h2>Trusted by 1000+ GTM teams</h2>
+    <div class="row">
+      <img src="https://cdn.prod.website-files.com/687fce092940b00a1d5d923a/6a72152a56d7e2b730eab481_moengage-logo-dark-1A1A1A%201%20(2).svg" alt="MoEngage" />
+      <img src="https://cdn.prod.website-files.com/687fce092940b00a1d5d923a/6a72152a6c3d148184457157_Sprinklr%20Logo%201%20(2).svg" alt="Sprinklr" />
+      <img src="https://cdn.prod.website-files.com/687fce092940b00a1d5d923a/6a72152a2804ddd62fda1db6_image%20186.svg" alt="Shippit" />
+      <img src="https://cdn.prod.website-files.com/687fce092940b00a1d5d923a/6a72152a40b9e26d621f9406_svgexport-2%201.svg" alt="Descope" />
+    </div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2 class="display">Why companies are switching from legacy ABM software to Factors.ai</h2>
+    <div class="why">
+      <div class="item"><h3>From signals to actions</h3><p>Legacy ABM tools show you which accounts are active. Factors.ai tells you how to convert them, and Scout agents make those insights actionable.</p></div>
+      <div class="item"><h3>Contact-level identification</h3><p>Account-level identification tells you the company. Factors.ai identifies the person behind the activity, like the VP of Marketing who checked pricing twice this week.</p></div>
+      <div class="item"><h3>Attribute success to every touch</h3><p>First touch, last touch and influenced attribution tracked together, so every channel gets credit for what it actually did.</p></div>
+      <div class="item"><h3>AI grounded in your data</h3><p>Scout grounds every answer in your account data — intent, engagement, pipeline, revenue. Through Factors MCP, use Scout inside ChatGPT, Claude or Gemini.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="proof">
+  <div class="wrap">
+    <h2 class="display">The ABM teams who switched haven't looked back.</h2>
+    <div class="grid">
+      <div class="cell">
+        <blockquote>Factors is core to our stack. We use it for ads, full-funnel engagement, and giving sales clear visibility into who's engaging and why.</blockquote>
+        <div class="metric">25%</div>
+        <div class="who">Increase in LinkedIn Ads ROI — Shane Poyar, Descope</div>
+      </div>
+      <div class="cell">
+        <blockquote>We were able to identify and close a $45k deal in just 15 days.</blockquote>
+        <div class="metric">15%</div>
+        <div class="who">Pipeline generated through Factors — Saurabh Wahegaonkar, AudienceView</div>
+      </div>
+      <div class="cell">
+        <blockquote>Q1 was our best quarter ever for meetings booked and conversions.</blockquote>
+        <div class="metric">35%</div>
+        <div class="who">Pipeline influenced by G2 and Factors — Aashima Lamba, Upflow</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="faq">
+  <div class="wrap">
+    <div class="faq-top">
+      <h2 class="display" style="margin:0">Got questions? We got answers</h2>
+    </div>
+    <div class="statebar" id="statebar"></div>
+    <div id="faqlist"></div>
+  </div>
+</section>
+
+<section class="closer">
+  <div class="wrap">
+    <h2>Your GTM won't run itself. Until now.</h2>
+    <div class="row">
+      <a class="cta cta-red" href="https://app.factors.ai/signup">Book a demo</a>
+      <a class="cta cta-outline" href="https://app.factors.ai/signup">Try for Free</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    Internal demo clone of factors.ai, built to show the Docket FAQ Agent. Not a live Factors property.
+    Copy and logos © Factors Inc.
+  </div>
+</footer>
+
+<div class="demobar" role="group" aria-label="FAQ Agent demo states">
+  <div class="h">FAQ AGENT STATE</div>
+  <button data-state="off" aria-pressed="true">Off — the FAQ block today</button>
+  <button data-state="new" aria-pressed="false">New visitor, no context</button>
+  <button data-state="intent" aria-pressed="false">Visitor who saw /pricing</button>
+  <button data-state="chatted" aria-pressed="false">Already talked to Scout</button>
+  <button class="reset" id="resetBtn">Reset agent session</button>
+</div>
+
+<script>
+const SETS = {
+  off:{
+    note:"FAQ Agent <b>off</b>. This is the static FAQ block on factors.ai today: the same five questions for every visitor, and no mention of any live offer.",
+    items:[
+      ["What does \"intent data\" actually mean in ABM and how does it help my sales team take action?","It shows which target accounts are researching problems you solve before they fill a form. Factors pulls those signals from your site, ads and third-party sources into a clear priority list for sales."],
+      ["We have a tight ICP of about 1,000 target accounts. Can Factors.ai tell us which ones are actually in-market right now?","Yes. Accounts are scored on real engagement — site behaviour, content consumption, ad interaction and third-party intent — into a live ranked list of who is showing the most buying activity."],
+      ["Can Factors.ai track when a specific named account visits a specific page, like our ABM landing page?","Yes. Upload your target account list and get notified the moment any of those accounts lands on your homepage, a personalised page or pricing."],
+      ["When our SDRs reach out, can they see if that account has already been engaging with us?","Yes. Reps can pull a full account timeline — pages visited, ad impressions, content consumed — and it shows up in your CRM."],
+      ["Can we sync our hot account list to LinkedIn and Meta to run ABM campaigns across both?","Yes. Push your highest-intent account lists to both platforms as matched audiences that update automatically as scores change."]
+    ]
+  },
+  new:{
+    note:"<b>First-time visitor, no context.</b> The Agent reorders the block, leads with the live offer and keeps answers short, so the incentive is visible before the visitor ever opens the chat.",
+    items:[
+      ["Are there any offers running right now?","Yes — 500 free Factors credits when you book a demo, plus a free trial of the Growth plan. Nothing to pay upfront.","LIVE OFFER","Claim 500 free credits"],
+      ["What is Factors.ai, in one line?","An AI ABM platform that identifies the accounts and people on your site, scores their intent, and pushes those lists straight into your ads and CRM."],
+      ["How long does it take to see value?","Most teams see identified accounts on day one. It is a snippet on your site, not a data project."],
+      ["Is there a free way to try it before talking to sales?","Yes. Two free tools, no demo required: 20 accounts currently searching for your product, and a LinkedIn competitor ad teardown.","FREE TOOL","Get 20 in-market accounts"],
+      ["What does it cost?","Pricing scales with identified accounts rather than seats. Booking a demo also unlocks 15% off an annual plan.","LIVE OFFER","Book a demo"]
+    ]
+  },
+  intent:{
+    note:"<b>Same visitor after viewing /pricing.</b> The Agent drops the introductory questions, promotes commercial and procurement ones, and reframes the offer as a discount on the plan they are already evaluating.",
+    items:[
+      ["Can I get a discount if we commit annually?","Yes — 15% off annual plans when you book a demo, with 500 credits on top. A specialist can price your account volume on the call.","LIVE OFFER","Get 15% off — book a demo"],
+      ["How is Factors priced?","By identified accounts, not seats, so the whole GTM team can sit inside it. A specialist will size it against your traffic on the call."],
+      ["Can we trial the Growth plan before we buy?","Yes. A free Growth-plan trial is included when you book a demo.","LIVE OFFER","Start the trial"],
+      ["How does Factors compare on cost to a legacy ABM contract?","Factors is built as the switch-from option for teams on legacy ABM pricing. A specialist can run the like-for-like against your current contract."],
+      ["Is Factors SOC 2 certified?","Yes — SOC 2 Type II, and GDPR, CCPA and PECR compliant."]
+    ]
+  },
+  chatted:{
+    note:"<b>Visitor who already talked to Scout.</b> No repeat of the pitch. The Agent surfaces setup and implementation questions, restates the offer once as the closing action, and hands back into the same conversation.",
+    items:[
+      ["How do I set up incentives and offers on Factors?","Configure them in the campaign layer and attach them to the audience or page you want them shown on. A specialist can walk your setup in 15 minutes.","","Continue with Scout"],
+      ["What does the install actually involve?","One JS snippet sitewide, then connect your CRM and ad accounts. Usually under an hour of engineering time."],
+      ["Which integrations are supported?","LinkedIn, Google, HubSpot, Salesforce, Slack, and Factors MCP for ChatGPT, Claude and Gemini."],
+      ["Can we get help migrating our current ABM setup?","Yes. GTM engineering services cover migration and audience rebuild."],
+      ["I still have the credits offer — is it valid?","Yes. The 500 credits and the 15% annual discount hold until you book, and your conversation with Scout is saved.","OFFER STILL LIVE","Book the demo"]
+    ]
+  }
+};
+
+const listEl=document.getElementById('faqlist');
+const barEl=document.getElementById('statebar');
+
+function render(state){
+  const set=SETS[state];
+  barEl.innerHTML=set.note;
+  listEl.innerHTML=set.items.map(function(it,i){
+    const q=it[0],a=it[1],badge=it[2],cta=it[3];
+    const open=(i===0&&state!=='off')?' open':'';
+    return '<details class="qrow"'+open+'>'
+      +'<summary><span class="qtext">'+q+'</span>'
+      +(badge?'<span class="badge'+(badge==='FREE TOOL'?' blue':'')+'">'+badge+'</span>':'')
+      +'<span class="toggle">'+'↓'+'</span></summary>'
+      +'<div class="ans">'+a+(cta?'<br><br><a href="https://app.factors.ai/signup">'+cta+' →</a>':'')+'</div>'
+      +'</details>';
+  }).join('');
+}
+
+document.querySelectorAll('.demobar button[data-state]').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.demobar button[data-state]').forEach(function(x){x.setAttribute('aria-pressed','false')});
+    b.setAttribute('aria-pressed','true');
+    render(b.dataset.state);
+    document.getElementById('faq').scrollIntoView({block:'start'});
+  });
+});
+
+document.getElementById('resetBtn').addEventListener('click',async function(){
+  try{ if(window.AISeller&&typeof window.AISeller.resetContext==='function'){ await window.AISeller.resetContext(); } }catch(e){}
+  try{ localStorage.clear(); sessionStorage.clear(); }catch(e){}
+  location.reload();
+});
+
+render('off');
+</script>
+
+<!-- Docket AI Seller widget -->
+<script>
+      window.AISellerSettings = {
+        agent_id: '03ba397c-aead-4e73-a689-67fc1bf17995',
+      };
+      // Then load the widget loader script
+      (function () {
+        var w = window;
+        var ew = w.AISeller;
+        if (typeof ew === 'function') {
+          ew('update', w.AISellerSettings);
+        } else {
+          var d = document;
+          var i = function () {
+            i.q.push(arguments);
+          };
+          i.q = [];
+          i.q.push(['update', w.AISellerSettings]);
+          w.AISeller = i;
+          var l = function () {
+            var s = d.createElement('script');
+            s.type = 'text/javascript';
+            s.async = true;
+            s.src = 'https://d33t2173eag6fx.cloudfront.net/script/app/inbound-se-script/ai-seller.js';
+            var x = d.getElementsByTagName('script')[0];
+            x.parentNode.insertBefore(s, x);
+          };
+          if (document.readyState === 'complete') {
+            l();
+          } else if (w.attachEvent) {
+            w.attachEvent('onload', l);
+          } else {
+            w.addEventListener('load', l, false);
+          }
+        }
+      })();
+    </script>
+</body>
+</html>

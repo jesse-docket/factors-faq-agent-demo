@@ -16,6 +16,14 @@ Run `python3 scripts/build.py` after editing `data/resources.json`. The generato
 
 The Demo sandbox starts at https://jesse-docket.github.io/factors-faq-agent-demo/?walkthrough=1 and requires no login. Prompts and internal routing workbooks are delivered separately and must not be committed here.
 
+## Repeatable demo tests
+
+Normal pages include **Reset agent session** at the bottom left. It disconnects the current widget call, clears injected context and the Docket conversation/visitor keys verified in the public SDK, expires its `_docket_id` cookie, then reloads the current page. It leaves unrelated browser storage and consent cookies intact. Saved dashboard conversations are not deleted. If local storage cannot be reset, the control reports that limitation instead of claiming success.
+
+Use reset between independent test cases, not between turns in one conversation or before checking conversation-aware FAQs. Keep only one demo tab active during testing. The control is absent in `?walkthrough=1`, where the nested widget is also suppressed. This is a local browser reset; it does not erase server-side company context or promise a different inferred account.
+
+Shared styling restores the Factors logo, near-black text, cream panels, yellow highlights and red actions. The local logo asset comes from the public Factors website; page content, URLs, resource IDs, FAQ markup and agent deployment ID are unchanged.
+
 ## Deployment
 
 GitHub Pages publishes the main branch using the existing repository configuration. All routes are directories with index.html, so direct links and refreshes work without a routing server. Keep the project base path on all asset and navigation URLs.

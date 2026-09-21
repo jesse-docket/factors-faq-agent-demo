@@ -1,0 +1,29 @@
+# Factors resource demo
+
+Static GitHub Pages demo for reviewing Factors Guide. The site includes 11 written session summaries, two illustrative tools, resource indexes and FAQs. No report-generation, email-submission or video backend exists.
+
+## Content and routes
+
+`data/resources.json` is the shared resource catalog. IDs W01–W11 and LM01–LM02 are stable across page content and the separately delivered routing workbook. Every source URL maps to a local destination under `/factors-faq-agent-demo/`. Source pages were refreshed on 21 September 2026. Event dates and page dates have different meanings; archive entries are labeled.
+
+## Rebuilding pages
+
+Run `python3 scripts/build.py` after editing `data/resources.json`. The generator updates all 16 HTML pages; shared styling and behavior live in `assets/`. The private workbook and prompt exports are generated from the same catalog outside this repository.
+
+## Widget and walkthrough
+
+`assets/widget.js` contains the deployment snippet verified in agent e2c5be3b-40f6-4570-b63a-3ed25af0fe70's Deploy tab. Normal pages load the widget once. Add `?walkthrough=1` to suppress the embedded widget inside Docket's Demo browser. Internal links preserve this mode; ordinary browsing does not inherit it across unrelated sessions.
+
+The Demo sandbox starts at https://jesse-docket.github.io/factors-faq-agent-demo/?walkthrough=1 and requires no login. Prompts and internal routing workbooks are delivered separately and must not be committed here.
+
+## Deployment
+
+GitHub Pages publishes the main branch using the existing repository configuration. All routes are directories with index.html, so direct links and refreshes work without a routing server. Keep the project base path on all asset and navigation URLs.
+
+## Legacy documentation
+
+`docs/faq-agent-config.md` is a historical record of a prior offer-led experiment. Its credit, discount and trial claims are not approved guidance for this content-first demo. Use the new privately delivered prompt pack.
+
+## Rollback
+
+The pre-change deployment is commit b6cd454c1d6c53c14909d3485086c08b79b1dbd6. Revert the demo implementation commit(s) through a new commit to restore the prior site; do not force-push history. The agent's prompt/configuration rollback is separate from the website.

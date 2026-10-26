@@ -163,7 +163,10 @@
 
 <script>
 (function(){
-  var DEMO = 'https://app.storylane.io/demo/ktfcth6zcliz?embed=inline_overlay';
+  // NOTE: ?embed=inline_overlay renders BLANK when loaded directly into an iframe -
+  // that variant expects Storylane's JS SDK (Storylane.Play) to drive a handshake,
+  // which is how factors.ai embeds it. The plain demo URL self-renders correctly.
+  var DEMO = 'https://app.storylane.io/demo/ktfcth6zcliz';
   var KEY  = 'factors_demo_visitor';
 
   var stage = document.getElementById('stage');

@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Take a Tour of Factors — Interactive Demo</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="description" content="Interactive product tour of Factors. Demo clone used for Docket agent review.">
+<!--
+  Interactive Demo — clone of the #storylane section of factors.ai, used as the
+  Docket agent's first-priority lead magnet.
+
+  IMPORTANT: the name/email gate below is CLIENT-SIDE ONLY. Nothing is transmitted
+  anywhere - no form endpoint, no analytics call, no CRM. The values are kept in
+  localStorage purely so a returning visitor is not asked twice. This matches the
+  rest of this demo site, which has no email-submission backend. Wire it to a real
+  endpoint before treating captured emails as leads.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red:#FF3B30;
+    --red-dark:#e62e24;
+    --ink:#0f1115;
+    --muted:#5b6170;
+    --line:#e5e7eb;
+    --bg:#ffffff;
+    --dot:#eef2e6;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(var(--dot) 1.1px, transparent 1.1px) 0 0/22px 22px,
+      var(--bg);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1120px;margin:0 auto;padding:40px 20px 56px}
+  .eyebrow{
+    display:inline-block;font-size:12px;font-weight:600;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--red);margin:0 0 14px;
+  }
+  h1{
+    font-size:clamp(26px,4.4vw,44px);line-height:1.15;font-weight:700;
+    margin:0 0 10px;letter-spacing:-0.02em;
+  }
+  h1 .soft{color:var(--muted);font-weight:600;display:block}
+  .sub{font-size:15px;color:var(--muted);margin:0 0 28px;max-width:60ch;line-height:1.55}
+
+  /* ---------- preview ---------- */
+  .stage{position:relative;border:1px solid var(--line);background:#fff;overflow:hidden}
+  .stage img{display:block;width:100%;height:auto}
+  .overlay{
+    position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+    background:rgba(255,255,255,.18);backdrop-filter:saturate(1.05);
+  }
+  .card{
+    background:var(--card);padding:30px;text-align:center;
+    box-shadow:0 18px 50px rgba(15,17,21,.16);max-width:320px;width:86%;
+  }
+  .card h2{font-size:19px;line-height:1.3;margin:0 0 18px;font-weight:600}
+  .btn{
+    appearance:none;border:0;cursor:pointer;font-family:inherit;
+    background:var(--red);color:#fff;font-size:16px;font-weight:500;
+    height:46px;padding:0 42px;display:inline-flex;align-items:center;justify-content:center;
+    transition:background .15s ease;
+  }
+  .btn:hover{background:var(--red-dark)}
+  .btn:disabled{opacity:.55;cursor:not-allowed}
+  .btn-block{width:100%;padding:0 18px}
+
+  /* ---------- gate ---------- */
+  .gate{
+    position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    background:rgba(15,17,21,.55);padding:16px;z-index:5;
+  }
+  .gate.show{display:flex}
+  .gate .card{max-width:380px;text-align:left;padding:26px}
+  .gate h2{margin:0 0 6px;font-size:18px}
+  .gate p.note{margin:0 0 18px;font-size:13px;color:var(--muted);line-height:1.5}
+  label{display:block;font-size:12px;font-weight:600;margin:0 0 6px;color:var(--ink)}
+  input{
+    width:100%;height:42px;padding:0 12px;font-family:inherit;font-size:14px;
+    border:1px solid var(--line);background:#fff;color:var(--ink);margin:0 0 14px;
+  }
+  input:focus{outline:2px solid rgba(255,59,48,.35);outline-offset:-1px;border-color:var(--red)}
+  .err{color:var(--red);font-size:12px;margin:-9px 0 12px;display:none}
+  .err.show{display:block}
+  .fineprint{font-size:11px;color:var(--muted);margin:14px 0 0;line-height:1.5}
+  .linkish{
+    background:none;border:0;padding:0;margin-top:10px;color:var(--muted);
+    font-size:12px;text-decoration:underline;cursor:pointer;font-family:inherit;
+  }
+
+  /* ---------- storylane ---------- */
+  .tour{display:none;position:relative;width:100%;padding-bottom:54.03%;height:0;border:1px solid var(--line);background:#fff}
+  .tour.show{display:block}
+  .tour iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+  .backrow{display:none;margin-top:14px}
+  .backrow.show{display:block}
+
+  @media (max-width:640px){
+    .wrap{padding:24px 14px 36px}
+    .card{padding:22px}
+    .btn{padding:0 24px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="eyebrow">Interactive Demo</span>
+  <h1>Take our word for it.<span class="soft">But, also look at this.</span></h1>
+  <p class="sub">A self-guided tour of Factors — see how account signals, intent and LinkedIn activity come together into one view. No install, no call.</p>
+
+  <!-- preview + gate -->
+  <div class="stage" id="stage">
+    <img id="previewImg"
+         src="https://cdn.prod.website-files.com/687fce092940b00a1d5d923a/6a85461b7ab100904cac12c6_Frame%20(4).png"
+         alt="Preview of the Factors interactive demo">
+    <div class="overlay" id="overlay">
+      <div class="card">
+        <h2>Take A Tour of Factors</h2>
+        <button class="btn" id="startBtn" type="button">Start Demo</button>
+      </div>
+    </div>
+
+    <div class="gate" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+      <form class="card" id="gateForm" novalidate>
+        <h2 id="gateTitle">Where should we send your tour?</h2>
+        <p class="note">Tell us who you are and the demo opens right here.</p>
+
+        <label for="fname">First name</label>
+        <input id="fname" name="fname" type="text" autocomplete="given-name" placeholder="Priya">
+        <div class="err" id="errName">Please enter your first name.</div>
+
+        <label for="email">Work email</label>
+        <input id="email" name="email" type="email" autocomplete="email" placeholder="priya@company.com">
+        <div class="err" id="errEmail">Please enter a valid email address.</div>
+
+        <button class="btn btn-block" id="submitBtn" type="submit">Start the demo</button>
+        <p class="fineprint">Demo environment. Your details are kept in this browser only and are not sent anywhere.</p>
+      </form>
+    </div>
+  </div>
+
+  <!-- the actual Storylane tour -->
+  <div class="tour" id="tour">
+    <iframe id="tourFrame"
+            title="Factors interactive product tour"
+            loading="lazy"
+            allow="fullscreen"
+            allowfullscreen></iframe>
+  </div>
+  <div class="backrow" id="backrow">
+    <button class="linkish" id="restartBtn" type="button">Close the tour and go back</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var DEMO = 'https://app.storylane.io/demo/ktfcth6zcliz?embed=inline_overlay';
+  var KEY  = 'factors_demo_visitor';
+
+  var stage = document.getElementById('stage');
+  var overlay = document.getElementById('overlay');
+  var gate = document.getElementById('gate');
+  var tour = document.getElementById('tour');
+  var frame = document.getElementById('tourFrame');
+  var backrow = document.getElementById('backrow');
+  var form = document.getElementById('gateForm');
+  var fname = document.getElementById('fname');
+  var email = document.getElementById('email');
+  var errName = document.getElementById('errName');
+  var errEmail = document.getElementById('errEmail');
+
+  function known(){
+    try { return JSON.parse(localStorage.getItem(KEY) || 'null'); }
+    catch(e){ return null; }
+  }
+  function remember(v){
+    try { localStorage.setItem(KEY, JSON.stringify(v)); } catch(e){}
+  }
+
+  function launch(){
+    if (!frame.getAttribute('src')) frame.setAttribute('src', DEMO);
+    stage.style.display = 'none';
+    tour.classList.add('show');
+    backrow.classList.add('show');
+    tour.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+
+  document.getElementById('startBtn').addEventListener('click', function(){
+    var v = known();
+    if (v && v.email) { launch(); return; }   // returning visitor: don't ask twice
+    overlay.style.display = 'none';
+    gate.classList.add('show');
+    setTimeout(function(){ fname.focus(); }, 60);
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var okName = fname.value.trim().length > 0;
+    var okMail = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.value.trim());
+    errName.classList.toggle('show', !okName);
+    errEmail.classList.toggle('show', !okMail);
+    if (!okName || !okMail) return;
+
+    // Client-side only. Nothing leaves the browser.
+    remember({ name: fname.value.trim(), email: email.value.trim(), at: new Date().toISOString() });
+    gate.classList.remove('show');
+    launch();
+  });
+
+  document.getElementById('restartBtn').addEventListener('click', function(){
+    tour.classList.remove('show');
+    backrow.classList.remove('show');
+    stage.style.display = '';
+    overlay.style.display = '';
+    window.scrollTo({top:0, behavior:'smooth'});
+  });
+})();
+</script>
+</body>
+</html>

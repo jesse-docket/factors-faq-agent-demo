@@ -10,6 +10,15 @@
   Interactive Demo — clone of the #storylane section of factors.ai, used as the
   Docket agent's first-priority lead magnet.
 
+  EMBEDDING NOTE (verified 26 Oct 2026): the Storylane tour renders correctly when
+  opened directly, but does NOT paint inside an iframe here - and this page is itself
+  iframed inside the Docket chat widget, so the tour would be a third-level frame.
+  Storylane sends no X-Frame-Options/CSP, so this is a client-side guard or an SDK
+  handshake requirement (factors.ai drives it with Storylane.Play from js.storylane.io
+  rather than a bare iframe). A visible "Open it in a new tab" fallback is shown under
+  the tour so the demo is always usable. If the iframe experiment is abandoned, switch
+  the CTA behaviour from iframe to new_tab and point it straight at the Storylane URL.
+
   IMPORTANT: the name/email gate below is CLIENT-SIDE ONLY. Nothing is transmitted
   anywhere - no form endpoint, no analytics call, no CRM. The values are kept in
   localStorage purely so a returning visitor is not asked twice. This matches the
@@ -102,6 +111,8 @@
   .tour.show{display:block}
   .tour iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
   .backrow{display:none;margin-top:14px}
+  .fallback{margin:0 0 6px;font-size:13px;color:var(--muted)}
+  .fallback a{color:var(--red)}
   .backrow.show{display:block}
 
   @media (max-width:640px){
@@ -157,6 +168,7 @@
             allowfullscreen></iframe>
   </div>
   <div class="backrow" id="backrow">
+    <p class="fallback">Tour not loading? <a id="newTabLink" href="https://app.storylane.io/demo/ktfcth6zcliz" target="_blank" rel="noopener">Open it in a new tab</a>.</p>
     <button class="linkish" id="restartBtn" type="button">Close the tour and go back</button>
   </div>
 </div>
